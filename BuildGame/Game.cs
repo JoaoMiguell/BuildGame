@@ -2,7 +2,6 @@
 using static Raylib_cs.Raylib;
 using static BuildGame.Globals;
 using BuildGame.Types;
-using System.Numerics;
 using BuildGame.Types.Enums;
 namespace BuildGame;
 
@@ -44,6 +43,14 @@ internal class Game {
             temp.cords.Width += segments[col].ElementAt(row+k).Width;
             aux++;
           }
+          if(aux == 1) { 
+            for(int k = 1; lines[col+k][row] == "1"; k++) {
+              if(lines[col + k][row + 1] == "0" && lines[col + k][row - 1 <= 0 ? 1 : row - 1] == "0") {
+                temp.cords.Height += segments[col + k].ElementAt(row).Height;
+                lines[col + k][row] = "0";
+              }
+            }
+          }
           cels.Add(temp);
           row += aux;
         } else if(lines[col][row] == "P") {
@@ -60,7 +67,7 @@ internal class Game {
     // DRAW
     foreach(Cel cel in cels) {
       if(cel.CelType == CelType.Floor) {
-        DrawRectangle((int)cel.cords.X, (int)cel.cords.Y, (int)cel.cords.Width, 60, GenRandom());
+        DrawRectangle((int)cel.cords.X, (int)cel.cords.Y, (int)cel.cords.Width, (int)cel.cords.Height, GenRandom());
       }
       //DrawRectangleRec(new Rectangle(segment.X+10,segment.Y+10,50,50), Color.GREEN);
     }
