@@ -23,7 +23,7 @@ internal class Game {
 
   public Game(string path) {
     using StreamReader sr = new(path);
-    List<string> lines = sr.ReadToEnd().Split("\n").ToList();
+    List<string[]> lines = sr.ReadToEnd().Split("\n").Select(l => l.Split(",")).ToList();
     sr.Close();
 
     List<List<Rectangle>> segments = new();
@@ -36,18 +36,17 @@ internal class Game {
     }
 
     for(int col = 0; col < lines.Count; col++) {
-      string[] tLine = lines[col].Split(',');
-      for(int row = 0; row < tLine.Length; row++) {
-        if(tLine[row] == "1") {
+      for(int row = 0; row < lines[col].Length; row++) {
+        if(lines[col][row] == "1") {
           Cel temp = new(segments[col].ElementAt(row), CelType.Floor);
           int aux = 1;
-          for(int k = 1; tLine[row+k] == "1"; k++) {
+          for(int k = 1; lines[col][row+k] == "1"; k++) {
             temp.cords.Width += segments[col].ElementAt(row+k).Width;
             aux++;
           }
           cels.Add(temp);
           row += aux;
-        } else if(tLine[row] == "P") {
+        } else if(lines[col][row] == "P") {
           player = new(segments[col].ElementAt(row));
         }
       }
