@@ -1,15 +1,13 @@
 ﻿using BuildGame.Types.Enums;
 using Raylib_cs;
-using System.Numerics;
-using static Raylib_cs.Raylib;
 namespace BuildGame.Types;
 
 internal class Cel {
-  public Rectangle cords;
+  public Rectangle rect;
   public CelType CelType;
 
-  public Cel(Rectangle cords,CelType type) {
-    this.cords = cords;
+  public Cel(Rectangle rect,CelType type) {
+    this.rect = rect;
     CelType = type;
   }
 }

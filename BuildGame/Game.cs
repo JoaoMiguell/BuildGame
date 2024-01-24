@@ -40,13 +40,13 @@ internal class Game {
           Cel temp = new(segments[col].ElementAt(row), CelType.Floor);
           int aux = 1;
           for(int k = 1; lines[col][row+k] == "1"; k++) {
-            temp.cords.Width += segments[col].ElementAt(row+k).Width;
+            temp.rect.Width += segments[col].ElementAt(row+k).Width;
             aux++;
           }
           if(aux == 1) { 
             for(int k = 1; lines[col+k][row] == "1"; k++) {
               if(lines[col + k][row + 1] == "0" && lines[col + k][row - 1 <= 0 ? 1 : row - 1] == "0") {
-                temp.cords.Height += segments[col + k].ElementAt(row).Height;
+                temp.rect.Height += segments[col + k].ElementAt(row).Height;
                 lines[col + k][row] = "0";
               }
             }
@@ -54,20 +54,22 @@ internal class Game {
           cels.Add(temp);
           row += aux;
         } else if(lines[col][row] == "P") {
-          player = new(segments[col].ElementAt(row));
+          player = new(new(segments[col].ElementAt(row).X, segments[col].ElementAt(row).Y));
         }
       }
     }
   }
 
-  public void Draw() {
-    // UPDATE
-    player.Update(ref cels);
+  public void Update(float deltaTime) {
+    player.ResetLoop();
+    player.Update(ref cels, deltaTime);
+  }
 
+  public void Draw() {
     // DRAW
     foreach(Cel cel in cels) {
       if(cel.CelType == CelType.Floor) {
-        DrawRectangle((int)cel.cords.X, (int)cel.cords.Y, (int)cel.cords.Width, (int)cel.cords.Height, GenRandom());
+        DrawRectangle((int)cel.rect.X, (int)cel.rect.Y, (int)cel.rect.Width, (int)cel.rect.Height, Color.GRAY);
       }
       //DrawRectangleRec(new Rectangle(segment.X+10,segment.Y+10,50,50), Color.GREEN);
     }
