@@ -3,6 +3,7 @@ using static Raylib_cs.Raylib;
 using static BuildGame.Globals;
 using BuildGame.Types;
 using BuildGame.Types.Enums;
+using System.Numerics;
 namespace BuildGame;
 
 internal class Game {
@@ -19,6 +20,7 @@ internal class Game {
   // --------------------
   List<Cel> cels = new();
   Player player = new();
+  Vector2 initialPlayerPosition;
 
   public Game(string path) {
     using StreamReader sr = new(path);
@@ -55,13 +57,16 @@ internal class Game {
           row += aux;
         } else if(lines[col][row] == "P") {
           player = new(new(segments[col].ElementAt(row).X, segments[col].ElementAt(row).Y));
+          initialPlayerPosition = new(segments[col].ElementAt(row).X, segments[col].ElementAt(row).Y);
         }
       }
     }
   }
 
   public void Update(float deltaTime) {
-    player.ResetLoop();
+    if(IsKeyPressed(KeyboardKey.KEY_R)) {
+      player.Reset(initialPlayerPosition);
+    }
     player.Update(ref cels, deltaTime);
   }
 

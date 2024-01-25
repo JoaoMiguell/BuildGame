@@ -9,7 +9,6 @@ internal class Player {
   int horSpeed = 200;
   int jumpSpeed = 100;
   bool canJump = false;
-  private bool onFloor = false;
 
   public Player() { }
   public Player(Vector2 pos) {
@@ -26,38 +25,57 @@ internal class Player {
   public void Update(ref List<Cel> cels, float deltaTime) {
     // TODO: Collision detection all sides
 
-    bool hitObstacle = false;
+    bool onFloor = false;
     for(int i = 0; i < cels.Count; i++) {
-      Cel ei = cels[i];
-      if(ei.rect.X <= position.X &&
-          ei.rect.X + ei.rect.Width >= position.X &&
-          ei.rect.Y + 32 >= position.Y &&
-          ei.rect.Y - 32 <= position.Y + speed * deltaTime) {
-        hitObstacle = true;
-        speed = 0.0f;
-        position.Y = ei.rect.Y - 32;
+      Cel cel = cels[i];
+      if(CheckCollisionRecs(new(position.X, position.Y, 32, 32), cel.rect)) {
+        float overlapX = Math.Min(position.X + 32, cel.rect.X + cel.rect.Width) - Math.Max(position.X, cel.rect.X);
+        float overlapY = Math.Min(position.Y + 32, cel.rect.Y + cel.rect.Height) - Math.Max(position.Y, cel.rect.Y);
+
+        if(overlapX > overlapY) {
+          // top
+          if(position.Y < cel.rect.Y) {
+            onFloor = true;
+            speed = 0.0f;
+            position.Y = cel.rect.Y - 32;
+          }
+          // bottom
+          else position.Y = cel.rect.Y + cel.rect.Height;
+        }
+        else {
+          // left
+          if(position.X < cel.rect.X) position.X = cel.rect.X - 32;
+          // right
+          else position.X = cel.rect.X + cel.rect.Width;
+        }
       }
     }
 
-    if(!hitObstacle) {
+    if(!onFloor) {
       position.Y += speed * deltaTime;
-      speed += 400 * deltaTime;
+      speed += 300 * deltaTime;
       canJump = false;
     }
-    else canJump = true;
+    else
+      canJump = true;
 
-    if(IsKeyDown(KeyboardKey.KEY_A))
+    if(IsKeyDown(KeyboardKey.KEY_A) || IsKeyDown(KeyboardKey.KEY_LEFT))
       position.X -= horSpeed * deltaTime;
-    if(IsKeyDown(KeyboardKey.KEY_D))
+    if(IsKeyDown(KeyboardKey.KEY_D) || IsKeyDown(KeyboardKey.KEY_RIGHT))
       position.X += horSpeed * deltaTime;
-    if(IsKeyDown(KeyboardKey.KEY_SPACE) && canJump) {
+    if(IsKeyDown(KeyboardKey.KEY_S) || IsKeyDown(KeyboardKey.KEY_DOWN))
+      position.Y += horSpeed * deltaTime;
+    if((IsKeyDown(KeyboardKey.KEY_SPACE) || IsKeyDown(KeyboardKey.KEY_W) || IsKeyDown(KeyboardKey.KEY_UP))
+      && canJump) {
       speed = -jumpSpeed;
       canJump = false;
     }
   }
 
-  public void ResetLoop() {
-    onFloor = false;
+  public void Reset(Vector2 initPos) {
+    position.X = initPos.X;
+    position.Y = initPos.Y;
+    speed = 0;
+    canJump = false;
   }
 }
-
