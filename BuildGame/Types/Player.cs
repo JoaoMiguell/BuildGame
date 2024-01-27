@@ -19,7 +19,7 @@ internal class Player {
   }
 
   public void Draw() {
-    DrawRectangleV(position, new(32, 32), Color.MAGENTA);
+    DrawRectangleV(position, new(32, 32), Color.Magenta);
   }
 
   public void Update(ref List<Cel> cels, float deltaTime) {
@@ -59,13 +59,13 @@ internal class Player {
     else
       canJump = true;
 
-    if(IsKeyDown(KeyboardKey.KEY_A) || IsKeyDown(KeyboardKey.KEY_LEFT))
+    if(IsKeyDown(KeyboardKey.A) || IsKeyDown(KeyboardKey.Left))
       position.X -= horSpeed * deltaTime;
-    if(IsKeyDown(KeyboardKey.KEY_D) || IsKeyDown(KeyboardKey.KEY_RIGHT))
+    if(IsKeyDown(KeyboardKey.D) || IsKeyDown(KeyboardKey.Right))
       position.X += horSpeed * deltaTime;
-    if(IsKeyDown(KeyboardKey.KEY_S) || IsKeyDown(KeyboardKey.KEY_DOWN))
+    if(IsKeyDown(KeyboardKey.S) || IsKeyDown(KeyboardKey.Down))
       position.Y += horSpeed * deltaTime;
-    if((IsKeyDown(KeyboardKey.KEY_SPACE) || IsKeyDown(KeyboardKey.KEY_W) || IsKeyDown(KeyboardKey.KEY_UP))
+    if((IsKeyDown(KeyboardKey.Space) || IsKeyDown(KeyboardKey.W) || IsKeyDown(KeyboardKey.Up))
       && canJump) {
       speed = -jumpSpeed;
       canJump = false;

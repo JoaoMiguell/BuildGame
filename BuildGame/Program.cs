@@ -7,7 +7,7 @@ namespace BuildGame;
 
 internal class Program {
   static void Main(string[] args) {
-    SetConfigFlags(ConfigFlags.FLAG_VSYNC_HINT);
+    SetConfigFlags(ConfigFlags.VSyncHint);
     InitWindow(screenW, screenH, "Build Game");
 
     ScreenState state = ScreenState.MainMenu;
@@ -23,7 +23,7 @@ internal class Program {
             state = ScreenState.Game;
           }
           BeginDrawing();
-          ClearBackground(Color.BLACK);
+          ClearBackground(Color.Black);
           mainMenu.Draw();
           DrawFPS(10, 10);
           EndDrawing();
@@ -32,14 +32,14 @@ internal class Program {
 
         case ScreenState.Game: {
           float deltaTime = GetFrameTime();
-          if(IsKeyPressed(KeyboardKey.KEY_F1))
+          if(IsKeyPressed(KeyboardKey.F1))
             pause = !pause;
 
           if(!pause) {
             game.Update(deltaTime);
 
             BeginDrawing();
-            ClearBackground(Color.BLACK);
+            ClearBackground(Color.Black);
             game.Draw();
             DrawFPS(10, 10);
             EndDrawing();

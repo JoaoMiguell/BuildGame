@@ -7,7 +7,7 @@ internal class StartButton : Button {
     : base(rect, rectColor, text, textColor, textSize) {}
 
   public void Update(ref MainMenuState state) {
-    if(IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) 
+    if(IsMouseButtonPressed(MouseButton.Left) 
       && CheckCollisionPointRec(GetMousePosition(),rect)) {
       state = MainMenuState.Start;
     }

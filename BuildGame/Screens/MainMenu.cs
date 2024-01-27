@@ -12,7 +12,7 @@ internal class MainMenu {
 
   public MainMenu() {
     StartButton = new StartButton(new(screenW / 2 - 95, screenH / 2 - 25, 190, 50),
-                                      Color.BEIGE, "Start", Color.WHITE, 30);
+                                      Color.Beige, "Start", Color.White, 30);
   }
 
   public void Update(ref Game game) {
@@ -75,24 +75,24 @@ internal class SelectLevel {
 
   public void Update(ref Game game) {
     foreach(Levels level in levels) {
-      if(CheckCollisionPointRec(GetMousePosition(), level.rect) && IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT)) {
+      if(CheckCollisionPointRec(GetMousePosition(), level.rect) && IsMouseButtonPressed(MouseButton.Left)) {
         game = new(level.path);
       }
     }
   }
 
   public void Draw() {
-    DrawRectangleRec(rect, Color.DARKGRAY);
-    DrawRectangleRec(scrollBar, Color.GRAY);
+    DrawRectangleRec(rect, Color.DarkGray);
+    DrawRectangleRec(scrollBar, Color.Gray);
     foreach(Levels level in levels) {
       if(level.rect.Y + level.rect.Height < screenH) {
         if(CheckCollisionPointRec(GetMousePosition(), level.rect)) {
-          DrawRectangleRec(level.rect, Color.LIGHTGRAY);
-          DrawText(level.name, (int)level.rect.X + 10, (int)level.rect.Y + 10, 20, Color.BLACK);
+          DrawRectangleRec(level.rect, Color.LightGray);
+          DrawText(level.name, (int)level.rect.X + 10, (int)level.rect.Y + 10, 20, Color.Black);
         }
         else {
-          DrawRectangleRec(level.rect, Color.GRAY);
-          DrawText(level.name, (int)level.rect.X + 10, (int)level.rect.Y + 10, 20, Color.WHITE);
+          DrawRectangleRec(level.rect, Color.Gray);
+          DrawText(level.name, (int)level.rect.X + 10, (int)level.rect.Y + 10, 20, Color.White);
         }
 
       }

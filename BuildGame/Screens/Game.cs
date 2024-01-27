@@ -9,13 +9,13 @@ namespace BuildGame.Screens;
 internal class Game {
   // ------- TEMP -------  
   Dictionary<int, Color> colors = new Dictionary<int, Color> {
-      { 0, Color.RAYWHITE }, { 1, Color.LIGHTGRAY }, { 2, Color.GRAY },
-      { 3, Color.DARKGRAY }, { 4, Color.YELLOW }, { 5, Color.GOLD },
-      { 6, Color.ORANGE }, { 7, Color.PINK }, { 8, Color.RED },
-      { 9, Color.MAROON }, { 10, Color.GREEN }, { 11, Color.LIME },
-      { 12, Color.DARKGREEN }, { 13, Color.SKYBLUE }, { 14, Color.BLUE },
-      { 15, Color.DARKBLUE }, { 16, Color.PURPLE }, { 17, Color.VIOLET },
-      { 18, Color.DARKPURPLE }, { 19, Color.BEIGE }, { 20, Color.BROWN }
+      { 0, Color.RayWhite }, { 1, Color.LightGray }, { 2, Color.Gray },
+      { 3, Color.DarkGray }, { 4, Color.Yellow }, { 5, Color.Gold },
+      { 6, Color.Orange }, { 7, Color.Pink }, { 8, Color.Red },
+      { 9, Color.Maroon }, { 10, Color.Green }, { 11, Color.Lime },
+      { 12, Color.DarkGreen }, { 13, Color.SkyBlue }, { 14, Color.Blue },
+      { 15, Color.DarkBlue }, { 16, Color.Purple }, { 17, Color.Violet },
+      { 18, Color.DarkPurple }, { 19, Color.Beige }, { 20, Color.Brown }
   };
   // --------------------
   List<Cel> cels = new();
@@ -78,7 +78,7 @@ internal class Game {
   }
 
   public void Update(float deltaTime) {
-    if(IsKeyPressed(KeyboardKey.KEY_R)) {
+    if(IsKeyPressed(KeyboardKey.R)) {
       player.Reset(initialPlayerPosition);
     }
     player.Update(ref cels, deltaTime);
@@ -88,9 +88,9 @@ internal class Game {
     // DRAW
     foreach(Cel cel in cels) {
       if(cel.CelType == CelType.Floor) {
-        DrawRectangle((int)cel.rect.X, (int)cel.rect.Y, (int)cel.rect.Width, (int)cel.rect.Height, Color.GRAY);
+        DrawRectangle((int)cel.rect.X, (int)cel.rect.Y, (int)cel.rect.Width, (int)cel.rect.Height, Color.Gray);
       }
-      DrawRectangleRec(new Rectangle(cel.rect.X,cel.rect.Y,60,60), Color.GREEN);
+      //DrawRectangleRec(new Rectangle(cel.rect.X,cel.rect.Y,60,60), Color.Green);
     }
     player.Draw();
   }
