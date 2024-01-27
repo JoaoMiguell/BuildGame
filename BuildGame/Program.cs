@@ -12,14 +12,28 @@ internal class Program {
 
     ScreenState state = ScreenState.MainMenu;
 
-    Game game = new Game($@"{Directory.GetCurrentDirectory()}\Levels\base.txt");
+    Game game = new();
     MainMenu mainMenu = new MainMenu();
     bool pause = false;
     while(!WindowShouldClose()) {
       switch(state) {
+        case ScreenState.MainMenu: {
+          mainMenu.Update(ref game);
+          if(!game.isEmpty) {
+            state = ScreenState.Game;
+          }
+          BeginDrawing();
+          ClearBackground(Color.BLACK);
+          mainMenu.Draw();
+          DrawFPS(10, 10);
+          EndDrawing();
+        }
+        break;
+
         case ScreenState.Game: {
           float deltaTime = GetFrameTime();
-          if(IsKeyPressed(KeyboardKey.KEY_F1)) pause = !pause;
+          if(IsKeyPressed(KeyboardKey.KEY_F1))
+            pause = !pause;
 
           if(!pause) {
             game.Update(deltaTime);
@@ -34,18 +48,6 @@ internal class Program {
             BeginDrawing();
             EndDrawing();
           }
-        }
-        break;
-        case ScreenState.MainMenu: {
-          mainMenu.Update();
-          if(IsKeyPressed(KeyboardKey.KEY_F1))
-            state = ScreenState.Game;
-
-          BeginDrawing();
-          ClearBackground(Color.BLACK);
-          mainMenu.Draw();
-          DrawFPS(10, 10);
-          EndDrawing();
         }
         break;
       }

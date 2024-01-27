@@ -21,6 +21,11 @@ internal class Game {
   List<Cel> cels = new();
   Player player = new();
   Vector2 initialPlayerPosition;
+  public bool isEmpty = false;
+
+  public Game() {
+    isEmpty = true;
+  }
 
   public Game(string path) {
     using StreamReader sr = new(path);

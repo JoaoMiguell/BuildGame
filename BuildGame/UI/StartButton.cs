@@ -9,7 +9,6 @@ internal class StartButton : Button {
   public void Update(ref MainMenuState state) {
     if(IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) 
       && CheckCollisionPointRec(GetMousePosition(),rect)) {
-      Console.WriteLine("aaaaaaaaaaaa");
       state = MainMenuState.Start;
     }
   }
