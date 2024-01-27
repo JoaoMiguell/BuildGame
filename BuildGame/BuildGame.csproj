@@ -14,10 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Levels\base - Copy.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Levels\base.txt">
+    <None Update="TestScenarios\base.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

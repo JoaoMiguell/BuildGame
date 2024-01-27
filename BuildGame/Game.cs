@@ -4,7 +4,7 @@ using static BuildGame.Globals;
 using BuildGame.Types;
 using BuildGame.Types.Enums;
 using System.Numerics;
-namespace BuildGame.Screens;
+namespace BuildGame;
 
 internal class Game {
   // ------- TEMP -------  
@@ -21,11 +21,6 @@ internal class Game {
   List<Cel> cels = new();
   Player player = new();
   Vector2 initialPlayerPosition;
-  public bool isEmpty = false;
-
-  public Game() {
-    isEmpty = true;
-  }
 
   public Game(string path) {
     using StreamReader sr = new(path);
@@ -46,12 +41,12 @@ internal class Game {
         if(lines[col][row] == "1") {
           Cel temp = new(segments[col].ElementAt(row), CelType.Floor);
           int aux = 1;
-          for(int k = 1; lines[col][row + k] == "1"; k++) {
-            temp.rect.Width += segments[col].ElementAt(row + k).Width;
+          for(int k = 1; lines[col][row+k] == "1"; k++) {
+            temp.rect.Width += segments[col].ElementAt(row+k).Width;
             aux++;
           }
-          if(aux == 1) {
-            for(int k = 1; lines[col + k][row] == "1"; k++) {
+          if(aux == 1) { 
+            for(int k = 1; lines[col+k][row] == "1"; k++) {
               if(lines[col + k][row + 1] == "0" && lines[col + k][row - 1 <= 0 ? 1 : row - 1] == "0") {
                 temp.rect.Height += segments[col + k].ElementAt(row).Height;
                 lines[col + k][row] = "0";
@@ -60,8 +55,7 @@ internal class Game {
           }
           cels.Add(temp);
           row += aux;
-        }
-        else if(lines[col][row] == "P") {
+        } else if(lines[col][row] == "P") {
           player = new(new(segments[col].ElementAt(row).X, segments[col].ElementAt(row).Y));
           initialPlayerPosition = new(segments[col].ElementAt(row).X, segments[col].ElementAt(row).Y);
         }
@@ -88,7 +82,7 @@ internal class Game {
   }
 
   private Color GenRandom() {
-    int num = new Random().Next(0, 21);
+    int num = new Random().Next(0,21);
     return colors[num];
   }
 }
