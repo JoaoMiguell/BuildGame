@@ -7,7 +7,7 @@ internal class Player {
   Vector2 position = new();
   float speed = 0;
   int horSpeed = 200;
-  int jumpSpeed = 100;
+  int jumpSpeed = 200;
   bool canJump = false;
 
   public Player() { }

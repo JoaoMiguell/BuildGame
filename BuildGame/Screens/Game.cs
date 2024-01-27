@@ -29,7 +29,7 @@ internal class Game {
 
   public Game(string path) {
     using StreamReader sr = new(path);
-    List<string[]> lines = sr.ReadToEnd().Split("\n").Select(l => l.Split(",")).ToList();
+    List<string[]> lines = sr.ReadToEnd().Split("\n").Select(l => l.TrimEnd('\r').Split(",")).ToList();
     sr.Close();
 
     List<List<Rectangle>> segments = new();
@@ -46,16 +46,24 @@ internal class Game {
         if(lines[col][row] == "1") {
           Cel temp = new(segments[col].ElementAt(row), CelType.Floor);
           int aux = 1;
-          for(int k = 1; lines[col][row + k] == "1"; k++) {
-            temp.rect.Width += segments[col].ElementAt(row + k).Width;
-            aux++;
+          for(int k = 1; row + k < lines[col].Length; k++) {
+            if(lines[col][row + k] == "1") {
+              temp.rect.Width += segments[col].ElementAt(row + k).Width;
+              aux++;
+            }
+            else
+              break;
           }
           if(aux == 1) {
             for(int k = 1; lines[col + k][row] == "1"; k++) {
-              if(lines[col + k][row + 1] == "0" && lines[col + k][row - 1 <= 0 ? 1 : row - 1] == "0") {
+              string right = row + 1 <= lines[col + k].Length ? "0" : lines[col + k][row+1];
+              string left = row - 1 < 0 ? "0" : lines[col + k][row - 1];
+              if(right == "0" && left == "0") {
                 temp.rect.Height += segments[col + k].ElementAt(row).Height;
                 lines[col + k][row] = "0";
               }
+              else
+                break;
             }
           }
           cels.Add(temp);
@@ -82,7 +90,7 @@ internal class Game {
       if(cel.CelType == CelType.Floor) {
         DrawRectangle((int)cel.rect.X, (int)cel.rect.Y, (int)cel.rect.Width, (int)cel.rect.Height, Color.GRAY);
       }
-      //DrawRectangleRec(new Rectangle(segment.X+10,segment.Y+10,50,50), Color.GREEN);
+      DrawRectangleRec(new Rectangle(cel.rect.X,cel.rect.Y,60,60), Color.GREEN);
     }
     player.Draw();
   }
