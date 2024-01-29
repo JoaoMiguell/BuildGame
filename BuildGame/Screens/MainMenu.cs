@@ -7,19 +7,23 @@ namespace BuildGame.Screens;
 
 internal class MainMenu {
   StartButton StartButton;
-  SelectLevel? SelectLevel = new();
+  CloseButton CloseButton;
+  public SelectLevel? SelectLevel;
   MainMenuState State = MainMenuState.Main;
 
   public MainMenu() {
     StartButton = new StartButton(new(screenW / 2 - 95, screenH / 2 - 25, 190, 50),
                                       Color.Beige, "Start", Color.White, 30);
+
+    CloseButton = new CloseButton(new(screenW / 2 - 95, screenH / 2 + 25, 190, 50),
+                                      Color.Red, "Close", Color.White, 30);
   }
 
-  public void Update(ref Game game) {
+  public void Update(ref Game game, ref bool exit) {
     switch(State) {
       case MainMenuState.Main: {
         StartButton.Update(ref State);
-
+        CloseButton.Update(ref exit);
       }
       break;
       case MainMenuState.Start: {
@@ -35,13 +39,19 @@ internal class MainMenu {
     switch(State) {
       case MainMenuState.Main: {
         StartButton.Draw();
+        CloseButton.Draw();
       }
       break;
       case MainMenuState.Start: {
-        SelectLevel!.Draw();
+        SelectLevel?.Draw();
       }
       break;
     }
+  }
+
+  public void Reset() {
+    SelectLevel = null;
+    State = MainMenuState.Main;
   }
 }
 

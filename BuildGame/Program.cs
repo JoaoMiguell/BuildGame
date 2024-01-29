@@ -8,6 +8,7 @@ namespace BuildGame;
 internal class Program {
   static void Main(string[] args) {
     SetConfigFlags(ConfigFlags.VSyncHint);
+    SetExitKey(KeyboardKey.F12);
     InitWindow(screenW, screenH, "Build Game");
 
     ScreenState state = ScreenState.MainMenu;
@@ -15,10 +16,13 @@ internal class Program {
     Game game = new();
     MainMenu mainMenu = new MainMenu();
     bool pause = false;
-    while(!WindowShouldClose()) {
+    bool exit = false;
+    while(!exit) {
+      if(WindowShouldClose() && !IsKeyPressed(KeyboardKey.Escape)) exit = true;
+
       switch(state) {
         case ScreenState.MainMenu: {
-          mainMenu.Update(ref game);
+          mainMenu.Update(ref game, ref exit);
           if(!game.isEmpty) {
             state = ScreenState.Game;
           }
@@ -34,6 +38,14 @@ internal class Program {
           float deltaTime = GetFrameTime();
           if(IsKeyPressed(KeyboardKey.F1))
             pause = !pause;
+          if(mainMenu.SelectLevel != null)
+            mainMenu.Reset();
+          if(IsKeyPressed(KeyboardKey.Escape)) {
+            state = ScreenState.MainMenu;
+            game = new();
+            TraceLog(TraceLogLevel.Info, "TESTE");
+            break;
+          }
 
           if(!pause) {
             game.Update(deltaTime);
@@ -56,4 +68,3 @@ internal class Program {
     return;
   }
 }
-
