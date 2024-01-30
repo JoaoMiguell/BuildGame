@@ -10,9 +10,8 @@ internal class MainMenu {
   CloseButton CloseButton;
   EditButton EditButton;
   public SelectLevel? SelectLevel;
-  public EditLevel? Edit;
+  SelectEditLevel? SelectEditLevel;
   MainMenuState State = MainMenuState.Main;
-  Input InputEdit;
 
   public MainMenu() {
     StartButton = new StartButton(new(screenW / 2 - 95, screenH / 2 - 25, 190, 50),
@@ -24,7 +23,7 @@ internal class MainMenu {
     EditButton = new EditButton(new(screenW / 2 - 95, screenH / 2 + 75, 190, 50),
                                       Color.Green, "Edit", Color.White, 30);
 
-    InputEdit = new Input(new(screenW / 2 - 95, screenH / 2 - 25, 300, 200));
+    //InputEdit = new Input(new(screenW / 2 - 95, screenH / 2 - 25, 300, 200));
   }
 
   public void Update(ref Game game, ref bool exit) {
@@ -33,22 +32,21 @@ internal class MainMenu {
         StartButton.Update(ref State);
         CloseButton.Update(ref exit);
         EditButton.Update(ref State);
+        if(SelectLevel != null)
+          SelectLevel = null;
+        if(SelectEditLevel != null)
+          SelectEditLevel = null;
       }
       break;
       case MainMenuState.Start: {
         if(SelectLevel == null)
           SelectLevel = new();
-        SelectLevel.Update(ref game);
+        SelectLevel.Update(ref game, ref State);
       }
       break;
       case MainMenuState.EditSelect: {
-        InputEdit.Update(ref Edit);
-      }
-      break;
-      case MainMenuState.Edit: {
-        if(Edit == null)
-          Edit = new EditLevel();
-        Edit.Update();
+        if(SelectEditLevel == null) SelectEditLevel = new();
+        SelectEditLevel.Update(ref State);
       }
       break;
     }
@@ -66,8 +64,8 @@ internal class MainMenu {
         SelectLevel?.Draw();
       }
       break;
-      case MainMenuState.Edit: {
-        Edit?.Draw();
+      case MainMenuState.EditSelect: {
+        SelectEditLevel?.Draw();
       }
       break;
     }

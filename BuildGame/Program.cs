@@ -15,6 +15,7 @@ internal class Program {
 
     Game game = new();
     MainMenu mainMenu = new MainMenu();
+    //EditLevel? Edit;
     bool pause = false;
     bool exit = false;
     while(!exit) {
