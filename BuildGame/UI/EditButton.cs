@@ -10,7 +10,7 @@ internal class EditButton : Button {
   public void Update(ref MainMenuState state) {
     if(IsMouseButtonPressed(MouseButton.Left)
       && CheckCollisionPointRec(GetMousePosition(), rect)) {
-      state = MainMenuState.Edit;
+      state = MainMenuState.EditSelect;
     }
   }
 }

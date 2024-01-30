@@ -14,10 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Levels\base - Copy.txt">
+    <None Update="Levels\example.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Levels\base.txt">
+    <None Update="BaseLevel\base.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

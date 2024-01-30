@@ -19,7 +19,7 @@ internal class EditLevel {
   List<List<EditableCel>> cels = new();
   List<string[]> lines;
 
-  public EditLevel() {
+  public EditLevel(string name = "") {
     using StreamReader sr = new($@"{Directory.GetCurrentDirectory()}\Levels\base.txt");
     lines = sr.ReadToEnd().Split("\n").Select(l => l.TrimEnd('\r').Split(",")).ToList();
     sr.Close();
