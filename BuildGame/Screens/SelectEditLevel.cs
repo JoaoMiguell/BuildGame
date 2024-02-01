@@ -47,15 +47,27 @@ internal class SelectEditLevel {
                      Color.Green, "New", Color.White, 30);
   }
 
-  public void Update(ref MainMenuState mainMenuState) {
+  public void Update(ref MainMenuState mainMenuState, ref EditLevel editLevel, ref ScreenState screenState) {
     if(state == SelectEditLevelState.Main) {
       foreach(Levels level in levels) {
         if(CheckCollisionPointRec(GetMousePosition(), level.rect) && IsMouseButtonPressed(MouseButton.Left)) {
-          Console.WriteLine("Entrou");
+          editLevel.Load(level.path);
+          screenState = ScreenState.Edit;
         }
       }
     } else {
-      Console.WriteLine("teste");
+      if(input == null)
+        input = new(new(screenW/2-250,screenH/2 -25,500,50));
+      var letter = GetKeyPressed();
+      if(letter >= 65 &&  letter <= 90 && MeasureText(input.text,30) + 20 <= input.rect.Width) {
+        input.text += Convert.ToChar(letter);
+      } else if(letter == 259 && input.text!.Length != 0)
+        input.text = input.text!.Remove(input.text.Length - 1);
+
+      if(IsKeyPressed(KeyboardKey.Enter) && input.text!.Length > 0) {
+        editLevel.Create(input.text);
+        screenState = ScreenState.Edit;
+      }
     }
 
     backButton.Update(ref mainMenuState);
@@ -65,17 +77,21 @@ internal class SelectEditLevel {
   public void Draw() {
     DrawRectangleRec(rect, Color.DarkGray);
     DrawRectangleRec(scrollBar, Color.Gray);
-    foreach(Levels level in levels) {
-      if(level.rect.Y + level.rect.Height < screenH) {
-        if(CheckCollisionPointRec(GetMousePosition(), level.rect)) {
-          DrawRectangleRec(level.rect, Color.LightGray);
-          DrawText(level.name, (int)level.rect.X + 10, (int)level.rect.Y + 10, 20, Color.Black);
-        }
-        else {
-          DrawRectangleRec(level.rect, Color.Gray);
-          DrawText(level.name, (int)level.rect.X + 10, (int)level.rect.Y + 10, 20, Color.White);
-        }
+    if(state == SelectEditLevelState.New) {
+      input?.Draw();
+    } else {
+      foreach(Levels level in levels) {
+        if(level.rect.Y + level.rect.Height < screenH) {
+          if(CheckCollisionPointRec(GetMousePosition(), level.rect)) {
+            DrawRectangleRec(level.rect, Color.LightGray);
+            DrawText(level.name, (int)level.rect.X + 10, (int)level.rect.Y + 10, 20, Color.Black);
+          }
+          else {
+            DrawRectangleRec(level.rect, Color.Gray);
+            DrawText(level.name, (int)level.rect.X + 10, (int)level.rect.Y + 10, 20, Color.White);
+          }
 
+        }
       }
     }
     backButton.Draw();

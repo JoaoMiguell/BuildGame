@@ -12,6 +12,7 @@ internal class MainMenu {
   public SelectLevel? SelectLevel;
   SelectEditLevel? SelectEditLevel;
   MainMenuState State = MainMenuState.Main;
+  public bool isClean = false;
 
   public MainMenu() {
     StartButton = new StartButton(new(screenW / 2 - 95, screenH / 2 - 25, 190, 50),
@@ -26,7 +27,7 @@ internal class MainMenu {
     //InputEdit = new Input(new(screenW / 2 - 95, screenH / 2 - 25, 300, 200));
   }
 
-  public void Update(ref Game game, ref bool exit) {
+  public void Update(ref Game game, ref bool exit, ref EditLevel editLevel, ref ScreenState screenState) {
     switch(State) {
       case MainMenuState.Main: {
         StartButton.Update(ref State);
@@ -46,7 +47,7 @@ internal class MainMenu {
       break;
       case MainMenuState.EditSelect: {
         if(SelectEditLevel == null) SelectEditLevel = new();
-        SelectEditLevel.Update(ref State);
+        SelectEditLevel.Update(ref State, ref editLevel, ref screenState);
       }
       break;
     }
@@ -73,6 +74,8 @@ internal class MainMenu {
 
   public void Reset() {
     SelectLevel = null;
+    SelectEditLevel = null;
     State = MainMenuState.Main;
+    isClean = true;
   }
 }

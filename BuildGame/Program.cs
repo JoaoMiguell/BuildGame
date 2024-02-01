@@ -15,7 +15,7 @@ internal class Program {
 
     Game game = new();
     MainMenu mainMenu = new MainMenu();
-    //EditLevel? Edit;
+    EditLevel editLevel = new();
     bool pause = false;
     bool exit = false;
     while(!exit) {
@@ -23,14 +23,12 @@ internal class Program {
 
       switch(state) {
         case ScreenState.MainMenu: {
-          mainMenu.Update(ref game, ref exit);
-          if(!game.isEmpty) {
-            state = ScreenState.Game;
-          }
+          mainMenu.Update(ref game, ref exit, ref editLevel, ref state);
+          if(!game.isEmpty) state = ScreenState.Game;
+          //if(!editLevel.isEmpty) editLevel.Reset();
           BeginDrawing();
           ClearBackground(Color.Black);
           mainMenu.Draw();
-          DrawFPS(10, 10);
           EndDrawing();
         }
         break;
@@ -39,12 +37,11 @@ internal class Program {
           float deltaTime = GetFrameTime();
           if(IsKeyPressed(KeyboardKey.F1))
             pause = !pause;
-          if(mainMenu.SelectLevel != null)
-            mainMenu.Reset();
+          if(!mainMenu.isClean) mainMenu.Reset();
+          //if(!editLevel.isEmpty) editLevel.Reset();
           if(IsKeyPressed(KeyboardKey.Escape)) {
             state = ScreenState.MainMenu;
             game = new();
-            TraceLog(TraceLogLevel.Info, "TESTE");
             break;
           }
 
@@ -61,6 +58,17 @@ internal class Program {
             BeginDrawing();
             EndDrawing();
           }
+        }
+        break;
+        case ScreenState.Edit: {
+          if(!mainMenu.isClean)
+            mainMenu.Reset();
+          editLevel.Update(ref state);
+
+          BeginDrawing();
+          ClearBackground(Color.Black);
+          editLevel.Draw();
+          EndDrawing();
         }
         break;
       }
