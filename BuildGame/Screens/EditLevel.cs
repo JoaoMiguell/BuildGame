@@ -28,7 +28,7 @@ internal class EditLevel {
   public void Load(string path) {
     //using StreamReader sr = new($@"{Directory.GetCurrentDirectory()}\Levels\base.txt");
     using StreamReader sr = new(path);
-    lines = sr.ReadToEnd().Split("\n").Select(l => l.TrimEnd('\r').Split(",")).ToList();
+    lines = sr.ReadToEnd().Split("\n").Select(l => l.TrimEnd('\r').Split(",")).Where(s => s[0] != "").ToList();
     sr.Close();
     this.path = path;
 
@@ -65,11 +65,11 @@ internal class EditLevel {
         if(IsMouseButtonPressed(MouseButton.Left) && CheckCollisionPointRec(GetMousePosition(), c.rect)) {
           if(c.CelType == CelType.None) {
             c.CelType = CelType.Floor;
-            lines[(int)c.pos.Y][(int)c.pos.Y] = "1";
+            lines[(int)c.pos.Y][(int)c.pos.X] = "1";
           }
           else {
             c.CelType = CelType.None;
-            lines[(int)c.pos.Y][(int)c.pos.Y] = "0";
+            lines[(int)c.pos.Y][(int)c.pos.X] = "0";
           }
         }
       });
@@ -79,9 +79,12 @@ internal class EditLevel {
       List<string> tempList = lines.Select(l => string.Join(",", l)).ToList();
       string temp = "";
       tempList.ForEach(l => {
-        temp += new string(l + "\n");
+        temp += new string(l[..39] + "\n");
       });
-      File.WriteAllText(path, temp);
+      using StreamWriter sw = new(path, false);
+      sw.Write(temp);
+      sw.Flush();
+      sw.Close();
     }
 
     if(IsKeyPressed(KeyboardKey.Escape)) {
