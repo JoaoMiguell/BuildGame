@@ -12,7 +12,6 @@ class EditableCel : Cel {
     : base(rect, type) {
     pos = position;
   }
-
 }
 
 internal class EditLevel {
@@ -20,6 +19,9 @@ internal class EditLevel {
   List<string[]> lines;
   public bool isEmpty = false;
   string path;
+  Pencil pencil = new();
+  bool isMenuPencil = false;
+  bool hasPlayer = false;
 
   public EditLevel() {
     isEmpty = true;
@@ -49,6 +51,10 @@ internal class EditLevel {
         if(lines[row][col] == "1") {
           cels[row][col].CelType = CelType.Floor;
         }
+        else if(lines[row][col] == "P") {
+          cels[row][col].CelType = CelType.Player;
+          hasPlayer = true;
+        }
       }
     }
 
@@ -63,17 +69,32 @@ internal class EditLevel {
     cels.ForEach(cel => {
       cel.ForEach(c => {
         if(IsMouseButtonPressed(MouseButton.Left) && CheckCollisionPointRec(GetMousePosition(), c.rect)) {
-          if(c.CelType == CelType.None) {
-            c.CelType = CelType.Floor;
-            lines[(int)c.pos.Y][(int)c.pos.X] = "1";
+          if(pencil.type == CelType.Floor) {
+            if(c.CelType == CelType.None) {
+              c.CelType = CelType.Floor;
+              if(lines[(int)c.pos.Y][(int)c.pos.X] == "P")
+                hasPlayer = false;
+              lines[(int)c.pos.Y][(int)c.pos.X] = "1";
+            }
+            else {
+              c.CelType = CelType.None;
+              if(lines[(int)c.pos.Y][(int)c.pos.X] == "P")
+                hasPlayer = false;
+              lines[(int)c.pos.Y][(int)c.pos.X] = "0";
+            }
           }
-          else {
-            c.CelType = CelType.None;
-            lines[(int)c.pos.Y][(int)c.pos.X] = "0";
+          else if(pencil.type == CelType.Player && !hasPlayer) {
+            c.CelType = CelType.Player;
+            lines[(int)c.pos.Y][(int)c.pos.X] = "P";
+            hasPlayer = true;
           }
         }
       });
     });
+
+    if(isMenuPencil) {
+      pencil.Update();
+    }
 
     if(IsKeyDown(KeyboardKey.LeftControl) && IsKeyPressed(KeyboardKey.S)) {
       List<string> tempList = lines.Select(l => string.Join(",", l)).ToList();
@@ -90,18 +111,29 @@ internal class EditLevel {
     if(IsKeyPressed(KeyboardKey.Escape)) {
       state = ScreenState.MainMenu;
     }
+    if(IsKeyPressed(KeyboardKey.Tab)) {
+      isMenuPencil = !isMenuPencil;
+    }
   }
 
   public void Draw() {
     // DRAW
-    cels.ForEach(cel => {
-      cel.ForEach(c => {
-        if(c.CelType == CelType.Floor) {
-          DrawRectangle((int)c.rect.X, (int)c.rect.Y, (int)c.rect.Width, (int)c.rect.Height, Color.Gray);
-        }
+    if(isMenuPencil) {
+      pencil.Draw();
+    }
+    else {
+      cels.ForEach(cel => {
+        cel.ForEach(c => {
+          if(c.CelType == CelType.Floor) {
+            DrawRectangle((int)c.rect.X, (int)c.rect.Y, (int)c.rect.Width, (int)c.rect.Height, Color.Gray);
+          }
+          else if(c.CelType == CelType.Player) {
+            DrawRectangle((int)c.rect.X, (int)c.rect.Y, (int)c.rect.Width, (int)c.rect.Height, Color.Red);
+          }
+        });
+        //DrawRectangleRec(new Rectangle(cel.rect.X,cel.rect.Y,60,60), Color.Green);
       });
-      //DrawRectangleRec(new Rectangle(cel.rect.X,cel.rect.Y,60,60), Color.Green);
-    });
+    }
   }
 
   public void Reset() {
