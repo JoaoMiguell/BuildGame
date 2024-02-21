@@ -34,17 +34,7 @@ internal class EditLevel {
     sr.Close();
     this.path = path;
 
-    int y = 0, x = 0;
-    for(int i = 0; i < screenH; i += 60) {
-      List<EditableCel> temp = new();
-      for(int j = 0; j < screenW; j += 60) {
-        temp.Add(new EditableCel(new(j, i, 60, 60), CelType.None, new(x, y)));
-        x++;
-      }
-      cels.Add(temp);
-      y++;
-      x = 0;
-    }
+    GenerateCels();
 
     for(int row = 0; row < lines.Count; row++) {
       for(int col = 0; col < lines[row].Length; col++) {
@@ -62,7 +52,29 @@ internal class EditLevel {
   }
 
   public void Create(string name) {
+    path = $@"{Directory.GetCurrentDirectory()}\Levels\{name}.txt".ToLower();
+    File.Copy($@"{Directory.GetCurrentDirectory()}\BaseLevel\base.txt", path);
+    GenerateCels();
+    using StreamReader sr = new (path);
+    lines = sr.ReadToEnd().Split("\n").Select(l => l.TrimEnd('\r').Split(",")).Where(s => s[0] != "").ToList();
+  }
 
+  public void GenerateCels() {
+    int y = 0, x = 0;
+    for(int i = 0; i < screenH; i += 60) {
+      List<EditableCel> temp = new();
+      for(int j = 0; j < screenW; j += 60) {
+        temp.Add(new EditableCel(new(j, i, 60, 60), CelType.None, new(x, y)));
+        x++;
+      }
+      cels.Add(temp);
+      y++;
+      x = 0;
+    }
+  }
+
+  public bool VerifyFileName(string name) {
+    return File.Exists($@"{Directory.GetCurrentDirectory()}\Levels\{name}.txt");
   }
 
   public void Update(ref ScreenState state) {
@@ -117,7 +129,6 @@ internal class EditLevel {
   }
 
   public void Draw() {
-    // DRAW
     if(isMenuPencil) {
       pencil.Draw();
     }

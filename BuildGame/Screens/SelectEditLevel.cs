@@ -13,7 +13,7 @@ internal enum SelectEditLevelState {
 
 internal class NewLevelButton : Button {
   public NewLevelButton(Rectangle rect, Color rectColor, string text, Color textColor, int textSize)
-    : base(rect, rectColor, text, textColor, textSize) {}
+    : base(rect, rectColor, text, textColor, textSize) { }
 
   public void Update(ref SelectEditLevelState state) {
     if(IsMouseButtonPressed(MouseButton.Left)
@@ -55,16 +55,19 @@ internal class SelectEditLevel {
           screenState = ScreenState.Edit;
         }
       }
-    } else {
+    }
+    else {
       if(input == null)
-        input = new(new(screenW/2-250,screenH/2 -25,500,50));
+        input = new(new(screenW / 2 - 250, screenH / 2 - 25, 500, 50));
       var letter = GetKeyPressed();
-      if(letter >= 65 &&  letter <= 90 && MeasureText(input.text,30) + 20 <= input.rect.Width) {
+      if(letter >= 65 && letter <= 90 && MeasureText(input.text, 30) + 20 <= input.rect.Width) {
         input.text += Convert.ToChar(letter);
-      } else if(letter == 259 && input.text!.Length != 0)
+      }
+      else if(letter == 259 && input.text!.Length != 0)
         input.text = input.text!.Remove(input.text.Length - 1);
 
-      if(IsKeyPressed(KeyboardKey.Enter) && input.text!.Length > 0) {
+      if(IsKeyPressed(KeyboardKey.Enter) && input.text!.Length > 0
+        && !editLevel.VerifyFileName(input.text)) {
         editLevel.Create(input.text);
         screenState = ScreenState.Edit;
       }
@@ -79,7 +82,8 @@ internal class SelectEditLevel {
     DrawRectangleRec(scrollBar, Color.Gray);
     if(state == SelectEditLevelState.New) {
       input?.Draw();
-    } else {
+    }
+    else {
       foreach(Levels level in levels) {
         if(level.rect.Y + level.rect.Height < screenH) {
           if(CheckCollisionPointRec(GetMousePosition(), level.rect)) {
